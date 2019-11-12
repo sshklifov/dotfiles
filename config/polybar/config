@@ -1,0 +1,162 @@
+; vim:ft=dosini
+
+[colors]
+; http://dotshare.it/dots/811
+background = #1d1f21
+foreground = #b4b7b4
+
+#black
+color0 = #353540
+color8 = #545466
+#red
+color1 = #8c5760
+color9 = #b26f7a
+#green
+color2 = #7b8c58
+color10 = #9db270
+#yellow
+color3 = #8c6e43
+color11 = #b28c55
+#blue
+color4 = #58698c
+color12 = #7086b2
+#magenta
+color5 = #7b5e7d
+color13 = #9c77b2
+#cyan
+color6 = #66808c
+color14 = #82a2b2
+#white
+color7 = #8c8b8b
+color15 = #b8b8c8
+
+[bar/top]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 24
+bottom = false
+offset-x = 0
+offset-y = 0
+radius = 0
+fixed-center = true
+
+# add alpha
+background = #aa1d1f21
+foreground = #ddb4b7b4
+
+line-size = 2
+border-size = 4
+border-color = ${self.background}
+
+padding-left = 0
+padding-right = 1
+
+font-0 = URWGothic:style=Book:size=10;1
+font-1 = NotoSansMono:style=Light:size=10;3
+font-2 = FontAwesome5Free:style=Solid:size=10;3
+
+module-margin-left = 1
+module-margin-right = 2
+
+modules-left = i3
+modules-center = date
+modules-right = cpu mem filesystem eth volume xkb
+tray-position = right
+tray-padding = 1
+
+click-left =
+click-middle =
+click-right =
+scroll-up =
+scroll-down =
+double-click-left =
+double-click-middle =
+double-click-right =
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+pin-workspaces = true
+
+index-sort = true
+enable-scroll = false
+enable-click = true
+
+label-mode-padding = 2
+label-mode-foreground = ${colors.background}
+label-mode-background = ${colors.color15}
+
+label-focused = %index%
+label-focused-padding = 2
+label-focused-background = ${colors.color12}
+label-focused-foreground = ${colors.background}
+
+label-unfocused = %index%
+label-unfocused-background = ${bar/top.background}
+# add alpha
+label-unfocused-foreground = #aab4b7b4
+label-unfocused-padding = 2
+
+label-visible = %index%
+label-visible-underline = ${self.label-focused-background}
+label-visible-padding = 2
+
+label-urgent = %index%
+label-urgent-foreground = ${colors.background}
+label-urgent-background = ${colors.color15}
+label-urgent-padding = 2
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = %a
+date-alt = %b %d
+time = %R
+format = <label>
+label =  %{F#b4b7b4}%{T2}%date%%{T-} %{T2}%time%%{T-}%{F-}
+
+[module/filesystem]
+type = internal/fs
+mount-0 = /
+format-mounted = <label-mounted>
+format-unmounted = <label-unmounted>
+
+fixed-values = true
+label-mounted =  %{F#b4b7b4}%{T2}%percentage_used%%%{T-}%{F-}
+label-unmounted =
+
+[module/cpu]
+type = internal/cpu
+interval = 3
+format = <label>
+label =  %{F#b4b7b4}%{T2}%percentage%%%{T-}%{F-}
+
+[module/mem]
+type = internal/memory
+interval = 3
+format = <label>
+label =  %{F#b4b7b4}%{T2}%percentage_used%%%{T-}%{F-}
+
+[module/eth]
+type = internal/network
+interface = enp37s0
+interval = 3
+
+format-connected = <label-connected>
+label-connected =  %{F#b4b7b4}%{T2}%ifname%%{T-}%{F-}
+
+format-disconnected = <label-disconnected>
+label-disconnected =  %{F#b4b7b4}%{T2}offline%{T-}%{F-}
+
+format-packetloss = <label-connected>
+
+[module/volume]
+type = internal/pulseaudio
+format-volume = <label-volume>
+label-volume =  %{F#b4b7b4}%{T2}%percentage%%{T-}%{F-}
+label-muted =  %{F#b4b7b4}%{T2}muted%{T-}%{F-}
+
+[module/xkb]
+type = internal/xkeyboard
+label-layout =  %{F#b4b7b4}%{T2}%layout%%{T-}%{F-}
