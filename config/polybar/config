@@ -136,7 +136,7 @@ label =  %{F#b4b7b4}%{T2}%percentage%%%{T-}%{F-}
 type = internal/memory
 interval = 3
 format = <label>
-label =  %{F#b4b7b4}%{T2}%percentage_used%%%{T-}%{F-}
+label =  %{F#b4b7b4}%{T2}%gb_free%%{T-}%{F-}
 
 [module/eth]
 type = internal/network
