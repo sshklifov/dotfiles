@@ -13,8 +13,8 @@ Plug 'PotatoesMaster/i3-vim-syntax'
 Plug 'octol/vim-cpp-enhanced-highlight'
 
 Plug 'Valloric/YouCompleteMe', { 'for': ['c', 'cpp'], 'do': './install.py --clang-completer --system-libclang' }
-" Plug 'sshklifov/auclo'
-" Plug 'sakhnik/nvim-gdb'
+Plug 'sshklifov/auclo'
+"Plug 'sakhnik/nvim-gdb'
 
 call plug#end()
 

@@ -44,23 +44,22 @@ fixed-center = true
 background = #aa1d1f21
 foreground = #ddb4b7b4
 
-line-size = 2
-border-size = 4
+border-size = 0
 border-color = ${self.background}
 
 padding-left = 0
-padding-right = 1
+padding-right = 2
 
 font-0 = URWGothic:style=Book:size=10;1
-font-1 = NotoSansMono:style=Light:size=10;3
-font-2 = FontAwesome5Free:style=Solid:size=10;3
+font-1 = URWGothic:style=Book:size=11;2
+font-2 = FontAwesome5Free:style=Solid:size=10;2
 
-module-margin-left = 1
-module-margin-right = 2
+module-margin-left = 0
+module-margin-right = 3
 
 modules-left = i3
 modules-center = date
-modules-right = cpu mem filesystem eth volume xkb
+modules-right = cpu mem filesystem xkb
 tray-position = right
 tray-padding = 1
 
@@ -114,7 +113,7 @@ date = %a
 date-alt = %b %d
 time = %R
 format = <label>
-label =  %{F#b4b7b4}%{T2}%date%%{T-} %{T2}%time%%{T-}%{F-}
+label = %{F#bbf4f7f4} %{T2}%date%%{T-} %{T2}%time%%{T-}%{F-}
 
 [module/filesystem]
 type = internal/fs
@@ -123,40 +122,33 @@ format-mounted = <label-mounted>
 format-unmounted = <label-unmounted>
 
 fixed-values = true
-label-mounted =  %{F#b4b7b4}%{T2}%percentage_used%%%{T-}%{F-}
+label-mounted = %{F#bbf4f7f4} %{T2}%percentage_used%%%{T-}%{F-}
 label-unmounted =
 
 [module/cpu]
 type = internal/cpu
 interval = 3
 format = <label>
-label =  %{F#b4b7b4}%{T2}%percentage%%%{T-}%{F-}
+label = %{F#bbf4f7f4} %{T2}%percentage%%%{T-}%{F-}
 
 [module/mem]
 type = internal/memory
 interval = 3
 format = <label>
-label =  %{F#b4b7b4}%{T2}%gb_free%%{T-}%{F-}
-
-[module/eth]
-type = internal/network
-interface = enp37s0
-interval = 3
-
-format-connected = <label-connected>
-label-connected =  %{F#b4b7b4}%{T2}%ifname%%{T-}%{F-}
-
-format-disconnected = <label-disconnected>
-label-disconnected =  %{F#b4b7b4}%{T2}offline%{T-}%{F-}
-
-format-packetloss = <label-connected>
+label = %{F#bbf4f7f4} %{T2}%gb_free%%{T-}%{F-}
 
 [module/volume]
 type = internal/pulseaudio
 format-volume = <label-volume>
-label-volume =  %{F#b4b7b4}%{T2}%percentage%%{T-}%{F-}
-label-muted =  %{F#b4b7b4}%{T2}muted%{T-}%{F-}
+label-volume = %{F#bbf4f7f4} %{T2}%percentage%%{T-}%{F-}
+label-muted = %{F#bbf4f7f4} %{T2}muted%{T-}%{F-}
 
 [module/xkb]
 type = internal/xkeyboard
-label-layout =  %{F#b4b7b4}%{T2}%layout%%{T-}%{F-}
+label-layout = %{F#bbf4f7f4} %{T2}%layout%%{T-}%{F-}
+label-indicator-on-capslock =
+label-indicator-off-capslock =
+label-indicator-on-numlock =
+label-indicator-off-numlock =
+label-indicator-on-scrolllock =
+label-indicator-off-scrolllock =
