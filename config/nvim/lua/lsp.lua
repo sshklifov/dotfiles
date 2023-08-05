@@ -156,8 +156,8 @@ local set_keymaps = function(client, bufnr)
   buf_set_keymap('n', '<leader>inst', '<cmd>lua RequestInstances()<CR>', opts)
   buf_set_keymap('n', '<leader>bas', '<cmd>lua RequestBaseClass()<CR>', opts)
   buf_set_keymap('n', '<leader>der', '<cmd>lua RequestDerivedClass()<CR>', opts)
-  buf_set_keymap('n', '<leader>wr', '<cmd>lua RequestRoleWrite()<CR>', opts)
-  buf_set_keymap('n', '<leader>rd', '<cmd>lua RequestRoleRead()<CR>', opts)
+  -- buf_set_keymap('n', '<leader>wr', '<cmd>lua RequestRoleWrite()<CR>', opts)
+  -- buf_set_keymap('n', '<leader>rd', '<cmd>lua RequestRoleRead()<CR>', opts)
 
   buf_set_keymap('n', '<leader>sym', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', opts)
   buf_set_keymap('n', '<leader>gsym', '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>', opts)
@@ -205,7 +205,9 @@ lspconfig.ccls.setup {
   },
   -- Uncomment for debug log
   -- cmd = { "/usr/bin/ccls", "-log-file=/tmp/ccls.log", "-v=1"}
-  cmd = { "/usr/bin/ccls" }
+  -- cmd = { "/usr/bin/ccls" }
+  cmd = { "/home/shs1sf/ccls/install/bin/ccls" }
+  -- cmd = {"/home/shs1sf/viml-server/lsp/a.out"},
 }
 
 lspconfig.pyright.setup {
@@ -214,11 +216,15 @@ lspconfig.pyright.setup {
   on_attach = set_keymaps_and_hl
 }
 
-lspconfig.cmake.setup {
-  root_dir = lspconfig.util.root_pattern("CMakeLists.txt"),
-  on_attach = set_keymaps,
-  buildDirectory = "build"
+lspconfig.vimls.setup {
+  cmd = {"/home/shs1sf/viml-server/lsp/a.out"},
+  root_dir = function(a, b) return "/home/shs1sf/viml-server/root_dir" end,
+  on_attach = set_keymaps_and_hl,
+  filetypes = { 'vim' },
+  single_file_support = true
 }
+
+
 
 function ListWorkspaces()
   local workspace_folders = {}

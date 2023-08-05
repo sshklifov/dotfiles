@@ -22,12 +22,34 @@ call plug#end()
 
 packadd cfilter
 
+" viml-server testing
+command! -nargs=* Test echo <q-args>
+
 """"""""""""""""""""""""""""Plugin settings"""""""""""""""""""""""""""" {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" netrw
+let g:netrw_hide = 1
+let g:netrw_banner = 0
+
 " debug
 let g:termdebug_capture_msgs = 1
 
 " vim-eunuch (substitution)
+function! Move(arg)
+  if a:arg == ""
+    echo "Did not move file"
+    return
+  endif
+
+  let oldname = expand("%:p")
+  let newname = a:arg . "/" . expand("%:t")
+  
+  let lua_str = 'lua vim.lsp.util.rename("' . oldname . '", "' . newname . '")'
+  exe lua_str
+endfunction
+
+command! -nargs=1 -complete=dir Move call Move(<q-args>)
+
 function! Rename(arg)
   if a:arg == ""
     echo "Did not rename file"
@@ -64,15 +86,13 @@ command! -nargs=0 -bang Delete call Delete('<bang>')
 let g:XkbSwitchEnable = 0
 let g:XkbSwitchLib = "/home/shs1sf/xkb-switch/build/libxkbswitch.so.1.8.5"
 
-" vim-eunich
-set diffopt-=horizontal
-set diffopt+=vertical
-
 " vim-commentary
 autocmd BufEnter,BufNew *.fish setlocal commentstring=#\ %s
 autocmd FileType vim setlocal commentstring=\"\ %s
 
 " vim-fugitive
+set diffopt-=horizontal
+set diffopt+=vertical
 
 function DescribeCommitish()
   let tags = FugitiveExecute("describe", "--all")
@@ -95,9 +115,7 @@ cabbr Gdt Git! difftool
 cabbr Gmt Git mergetool
 
 cab Pf Pfind
-cab Wf Wfind
-cab Bf Bfind
-cab CM FindCMake
+cab Gf Gfind
 
 cab Hi Highlight
 
@@ -106,6 +124,7 @@ cab Co Conly
 cab Cf Cfilter
 
 autocmd FileType gitcommit set spell
+autocmd FileType gitcommit set tw=90
 
 tnoremap <Esc> <C-\><C-n>
 
@@ -120,7 +139,6 @@ set cinoptions=L0,l1,b1,g0,t0,(s,U1,
 set number
 set relativenumber
 set cc=101
-autocmd FileType text,tex set tw=100
 
 " Smart searching with '/'
 set ignorecase
@@ -137,8 +155,8 @@ command! Qa qa
 set sessionoptions-=blank
 set shortmess+=I
 au FileType * setlocal fo-=cro
-let g:loaded_netrw = 1
-let g:loaded_netrwPlugin = 1
+" let g:loaded_netrw = 1
+" let g:loaded_netrwPlugin = 1
 nnoremap <C-w>t <C-w>T
 let mapleader = "\\"
 autocmd SwapExists * let v:swapchoice = "e"
@@ -166,6 +184,35 @@ autocmd FileType qf setlocal cursorline
 
 """"""""""""""""""""""""""""Quickfix"""""""""""""""""""""""""""" {{{
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:findExcludePaths = {
+      \ "/home/shs1sf/ccls": ["ccls-cache", "Release", ".git", "index_tests"],
+      \ "/home/shs1sf/ivs_": ["build", "install", ".git", "ambarella", "ros", "ccls-cache", ".ccls-cache", "extra_includes"],
+      \ "/home/shs1sf/neovim": ["build", ".git", "ccls-cache"]
+      \ }
+
+function! s:GetExcludePaths(dir)
+  for [key, value] in items(g:findExcludePaths)
+    if stridx(a:dir, key) >= 0
+      return value
+    endif
+  endfor
+  " Default result
+  return ["ccls-cache", ".git", "Debug", "Release", ".ccls"]
+endfunction
+
+function! s:OldFiles(read_shada)
+  if a:read_shada
+    rsh!
+  endif
+
+  let items = deepcopy(v:oldfiles)
+  let items = map(items, {_, f -> {"filename": f, "lnum": 1, 'text': fnamemodify(f, ":t")}})
+  call setqflist([], ' ', {'title': 'Oldfiles', 'items': items})
+  copen
+endfunction
+
+command -nargs=0 -bang Old call s:OldFiles(<bang>0)
+
 function! s:Grep(regex, ...)
   call setqflist([], ' ', {'title' : 'Grep', 'items' : []})
 
@@ -180,7 +227,8 @@ function! s:Grep(regex, ...)
         return {}
       endif
       " Apply filter
-      if exists('s:grep_exclude_paths')
+      " Bang means to force more results and not take into accound exclude paths.
+      if exists('s:grep_exclude_paths') && s:bang != "!"
         for exclude_path in s:grep_exclude_paths
           if stridx(sp[0], exclude_path) >= 0
             return {}
@@ -207,6 +255,7 @@ function! s:Grep(regex, ...)
   if type(what) == v:t_string && isdirectory(what)
     let cmd = cmd + ['-R', what]
     let s:grep_exclude_paths = s:GetExcludePaths(what)
+    let s:bang = get(a:, 2, "")
     let id = jobstart(cmd, {'on_stdout': function('OnEvent') } )
   else
     let cmd = ['xargs'] + cmd
@@ -218,6 +267,9 @@ function! s:Grep(regex, ...)
   call jobwait([id]) " Need to know length of items
   if exists("s:grep_exclude_paths")
     unlet s:grep_exclude_paths
+  endif
+  if exists("s:bang")
+    unlet s:bang
   endif
 
   let n = len(getqflist())
@@ -235,22 +287,22 @@ function! s:GrepQuickfixFiles(regex)
 endfunction
 
 " Current buffer
-command! -nargs=1 Grep call <SID>Grep(<q-args>, [expand("%:p")])
+command! -nargs=1 -bang Grep call <SID>Grep(<q-args>, [expand("%:p")])
 " All files in quickfix
-command! -nargs=1 Qgrep call <SID>GrepQuickfixFiles(<q-args>)
+command! -nargs=1 -bang Qgrep call <SID>GrepQuickfixFiles(<q-args>)
 " Current path
-command! -nargs=1 Rgrep call <SID>Grep(<q-args>, getcwd())
+command! -nargs=1 -bang Rgrep call <SID>Grep(<q-args>, getcwd(), "<bang>")
 " All indexed files in project
-command! -nargs=1 Igrep call <SID>Grep(<q-args>, s:GetIndexedFiles())
+command! -nargs=1 -bang Igrep call <SID>Grep(<q-args>, s:GetIndexedFiles())
 " All project files
-command! -nargs=1 Wgrep call <SID>Grep(<q-args>, GetWorkspace())
+command! -nargs=1 -bang Wgrep call <SID>Grep(<q-args>, GetWorkspace())
 
 " All document files
-command! -nargs=1 VimHelp call <SID>Grep(<q-args>, "/usr/share/nvim/runtime/doc")
+command! -nargs=1 -bang VimHelp call <SID>Grep(<q-args>, "/usr/share/nvim/runtime/doc")
 " All plugins
-command! -nargs=1 VimPlug call <SID>Grep(<q-args>, "~/.vim/plugged")
+command! -nargs=1 -bang VimPlug call <SID>Grep(<q-args>, "/home/shs1sf/.vim/plugged")
 " Config files
-command! -nargs=1 VimConfig call <SID>Grep(<q-args>, "~/.config/nvim")
+command! -nargs=1 -bang VimConfig call <SID>Grep(<q-args>, "~/.config/nvim")
 
 function! s:DeleteQfEntries(a, b)
   let qflist = filter(getqflist(), {i, _ -> i+1 < a:a || i+1 > a:b})
@@ -273,6 +325,11 @@ function! s:OpenJumpList()
   function! FixBuf(_, e)
     if !bufexists(a:e['bufnr'])
       let a:e['bufnr'] = bufnr("%")
+    endif
+    " Add jump line to the quickfix entry
+    let lines = getbufline(a:e['bufnr'], a:e['lnum'])
+    if len(lines) > 0
+      let a:e['text'] = lines[0]
     endif
     return a:e
   endfunction
@@ -368,6 +425,13 @@ highlight TabLine guibg=#1b2b34 guifg=#c0c5ce gui=underline
 highlight TabLineSel guifg=#1b2b34 guibg=#c0c5ce gui=underline
 
 hi default link qfFileName Comment
+hi default link netrwDir Comment
+
+" TODO is it ok this way?
+" set fillchars+=vert:\|
+" set fillchars+=vert:.
+" hi WinSeperator guifg=bg guibg=fg
+hi WinSeparator guifg=Black guibg=bg
 
 " Show indentation
 set list
@@ -497,6 +561,7 @@ function! PathShorten(file, maxwidth)
 endfunction
 
 command! -nargs=0 Bname echo expand("%:p")
+command! -nargs=0 Bnumber echo bufnr("%")
 command! -nargs=0 Pwd pwd
 
 function! AirlineInit()
@@ -561,7 +626,8 @@ xnoremap <silent> <leader>P :<C-W>set
 command! -bar Retab set invexpandtab | retab!
 
 function! s:ToggleDiff()
-  let do_open_diff = v:true
+  let fugitive_winids = []
+  let diff_winids = []
 
   let winids = gettabinfo(tabpagenr())[0]["windows"]
   for winid in winids
@@ -569,29 +635,44 @@ function! s:ToggleDiff()
     let bufnr = winbufnr(winnr)
     let name = bufname(bufnr)
     if name =~ "^fugitive:///"
-      let commitish = split(FugitiveParse(name)[0], ":")[0]
-      let realnr = bufnr(FugitiveReal(name))
-
-      call win_gotoid(winid)
-      " Memorize the last diff commitish for the buffer
-      exe "b " . realnr
-      let b:commitish = commitish
-      " Close fugitive window
-      quit
-
-      " Found a window in diff mode, which means that toggle should close all such windows
-      let do_open_diff = v:false
+      let fugitive_winids += [winid]
+    endif
+    if win_execute(winid, "echon &diff") == "1"
+      let diff_winids += [winid]
     endif
   endfor
 
-  if do_open_diff
+  if len(diff_winids) == 0
     " No window in diff mode, toggle should open diff
     if exists("b:commitish") && b:commitish != "0"
       exe "lefta Gdiffsplit " . b:commitish
     else
       lefta Gdiffsplit
     endif
+  else
+    if len(fugitive_winids) > 0
+      for winid in fugitive_winids
+        let winnr = win_id2tabwin(winid)[1]
+        let bufnr = winbufnr(winnr)
+        let name = bufname(bufnr)
+
+        let commitish = split(FugitiveParse(name)[0], ":")[0]
+        let realnr = bufnr(FugitiveReal(name))
+
+        " Memorize the last diff commitish for the buffer
+        call win_gotoid(winid)
+        exe "b " . realnr
+        let b:commitish = commitish
+        " Close fugitive window
+        quit
+      endfor
+    else
+      for winid in diff_winids
+        call win_execute(winid, "diffoff")
+      endfor
+    endif
   endif
+
 endfunction
 
 nnoremap <silent> <leader>dif :call <SID>ToggleDiff()<CR>
@@ -635,44 +716,36 @@ inoremap <silent> <C-Space> <C-X><C-O>
 " Parentheses
 inoremap ( ()<Left>
 inoremap (<BS> <NOP>
+inoremap (<C-V> (
 inoremap <expr> )  strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
 " Brackets
 inoremap [ []<Left>
 inoremap [<BS> <NOP>
+inoremap [<C-V> [
 inoremap <expr> ]  strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
 " Braces
 inoremap { {}<Left>
-inoremap {} {}<Left>
 inoremap {<BS> <NOP>
+inoremap {<C-V> {
 inoremap <expr> }  strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
 inoremap {<CR> {<CR>}<C-o>O
 
 nmap <leader>sp :setlocal invspell<CR>
+nmap <leader>wr :setlocal invwrap<CR>
 
-let g:findExcludePaths = {
-      \ "/home/shs1sf/ccls": ["ccls-cache", "Release", ".git", "index_tests"],
-      \ "/home/shs1sf/ivs_": ["build", "install", ".git", "ambarella", "ccls-cache", ".ccls-cache", "extra_includes"]
-      \ }
-
-function! s:GetExcludePaths(dir)
-  for [key, value] in items(g:findExcludePaths)
-    if stridx(a:dir, key) >= 0
-      return value
-    endif
-  endfor
-  return []
-endfunction
-
-function! s:Find(dir, arglist, Cb)
+function! s:Find(bang, dir, arglist, Cb)
   if empty(a:dir)
     return
   endif
 
   " Add exclude paths flags
   let flags = []
-  for excludePath in <SID>GetExcludePaths(a:dir)
-    let flags = flags + ["-path", "**/" . excludePath, "-prune", "-false", "-o"]
-  endfor
+  " Bang means to force more results and not take into accound exclude paths.
+  if a:bang != "!"
+    for excludePath in <SID>GetExcludePaths(a:dir)
+      let flags = flags + ["-path", "**/" . excludePath, "-prune", "-false", "-o"]
+    endfor
+  endif
 
   " Exclude directorties from results
   let flags = flags + ["-type", "f"]
@@ -690,7 +763,7 @@ function! s:Find(dir, arglist, Cb)
   return id
 endfunction
 
-function! s:FindInQuickfix(dir, ...)
+function! s:FindInQuickfix(bang, dir, ...)
   " Get the callback function
   let loc = get(a:, 1, "")
   let locSplit = split(loc, ':')
@@ -732,10 +805,11 @@ function! s:FindInQuickfix(dir, ...)
       let flags = ["-iregex", regex]
     endif
   endif
+  let flags += get(a:, 2, [])
 
   " Perform find operation
   call setqflist([], ' ', {'title' : 'Find', 'items' : []})
-  let id = <SID>Find(a:dir, flags, Cb)
+  let id = <SID>Find(a:bang, a:dir, flags, Cb)
 
   call jobwait([id]) " Need to know length of items
   let n = len(getqflist())
@@ -798,64 +872,18 @@ function! s:OpenIndexedFiles()
 endfunction
 command! -nargs=0 Index call <SID>OpenIndexedFiles()
 
-function! s:FindInWorkspace(loc)
+function! s:FindInWorkspace(bang, loc)
   let ws = GetWorkspace()
   if empty(ws)
     return
   endif
-  call <SID>FindInQuickfix(ws, a:loc)
+  call <SID>FindInQuickfix(a:bang, ws, a:loc)
 endfunction
 
-" TODO Only used in ListCMake
-function! s:GetFiles(dir, flags)
-  let s:files = []
-  function! AppendFiles(id, data, event)
-    let s:files = s:files + filter(a:data, {i, d -> filereadable(d)})
-    if len(s:files) > 4000
-      echom s:files
-      echom "Too many files, stopping..."
-      call jobstop(a:id)
-      return
-    endif
-  endfunction
-
-  let id = <SID>Find(a:dir, a:flags, function("AppendFiles"))
-  call jobwait([id])
-
-  let files = s:files
-  unlet s:files
-  return files
-endfunction
-
-function! s:ListCMake()
-  let hierarchy = v:true
-
-  let ws = GetWorkspace()
-  if empty(ws)
-    return
-  endif
-  " Find all CMake files in workspace
-  let files = s:GetFiles(ws, ['-iregex', '.*cmake.*'])
-  " Filter those that are relevant to the opened file
-  if a:hierarchy
-    let files = filter(files, {_, f -> stridx(expand("%:p:h"), fnamemodify(f, ':h')) >= 0 })
-    " Order by those that are most relevant
-    let files = reverse(sort(files))
-  endif
-
-  " Add to quickfix
-  let entries = map(files, {_, f -> {'filename': f, 'text': fnamemodify(f, ':t')}})
-  call setqflist([], ' ', {'title': 'CMake', 'items': entries})
-  copen
-endfunction
-
-" TODO Not used very much...
-command! -nargs=0 ListCMake call <SID>ListCMake()
-
-command! -nargs=+ -complete=file Find call <SID>FindInQuickfix(<f-args>)
-command! -nargs=? Pfind call <SID>FindInQuickfix(getcwd(), <q-args>)
-command! -nargs=? Wfind call <SID>FindInWorkspace(<q-args>)
-command! -nargs=? Bfind call <SID>FindInQuickfix(expand("%:p:h"), <q-args>)
+command! -nargs=? -bang List call <SID>FindInQuickfix("<bang>", getcwd(), <q-args>, ['-maxdepth', 1])
+command! -nargs=+ -bang -complete=file Find call <SID>FindInQuickfix("<bang>", <f-args>)
+command! -nargs=? -bang Pfind call <SID>FindInQuickfix("<bang>", getcwd(), <q-args>)
+command! -nargs=? -bang Gfind call <SID>FindInWorkspace("<bang>", <q-args>)
 
 command! -nargs=0 Methods lua ListFilteredSymbols('Method\\|Construct')
 command! -nargs=0 Functions lua ListFilteredSymbols('Function')
@@ -913,7 +941,8 @@ function! s:OpenSource()
   endfor
 
   "Default to using FindInWorkspace
-  call <SID>FindInWorkspace(expand("%:t:r") . ".c")
+  let nobang = ""
+  call <SID>FindInWorkspace(nobang, expand("%:t:r") . ".c")
 endfunction
 
 function! s:OpenHeader()
@@ -933,7 +962,8 @@ function! s:OpenHeader()
   endfor
 
   "Default to using FindInWorkspace
-  call <SID>FindInWorkspace(expand("%:t:r") . ".h")
+  let nobang = ""
+  call <SID>FindInWorkspace(nobang, expand("%:t:r") . ".h")
 endfunction
 
 nmap <silent> <leader>cpp :call <SID>OpenSource()<CR>
@@ -973,7 +1003,8 @@ function! s:EditConan(...)
   let path = MatchGetCapture(bufname, '.*/[0-9a-f]\{40\}/\(.*\)$')
   let pos = getpos(".")
   let loc = path . ":" . pos[1] . ":" . pos[2]
-  call <SID>FindInQuickfix(repo, loc)
+  let nobang = ""
+  call <SID>FindInQuickfix(nobang, repo, loc)
 endfunction
 
 nnoremap <silent> <leader>con :call <SID>EditConan()<CR>
@@ -1288,7 +1319,7 @@ command! -nargs=0 -bar TermDebugMessages tabnew | exe "b " . bufnr("Gdb messages
 command! LspStop lua vim.lsp.stop_client(vim.lsp.get_active_clients())
 command! LspProg lua print(vim.inspect(vim.lsp.util.get_progress_messages()))
 
-command! For lua vim.lsp.buf.format()
+command! -range=% For lua vim.lsp.buf.format{ range = {start= {<line1>, 0}, ["end"] = {<line2>, 0}} }
 
 " Document highlight
 highlight LspReferenceText gui=underline
@@ -1361,12 +1392,13 @@ function! GetLspStatus()
   return "Indexing " . percentage . "%" . sep
 endfunction
 
-function! GetRootDir(filename, bufnr)
+function! GetRootDir(filename, ...)
   let dir = fnamemodify(a:filename, ":h")
   while dir != "/"
     let json = dir . "/" . "compile_commands.json"
+    let dot_ccls = dir . "/" . ".ccls"
     let git = dir . "/" . ".git"
-    if filereadable(json) && isdirectory(git)
+    if (filereadable(json) && isdirectory(git)) || filereadable(dot_ccls)
       return dir
     endif
     let dir = fnamemodify(dir, ":h")
