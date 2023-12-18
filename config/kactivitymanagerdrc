@@ -1,0 +1,11 @@
+[activities]
+c9e544cc-0e8b-4772-aafd-e123cb1d378c=Basic programming
+e2fe2181-99f0-4d44-97a3-821894eaf94e=Default
+
+[activities-icons]
+c9e544cc-0e8b-4772-aafd-e123cb1d378c=activities
+
+[main]
+currentActivity=e2fe2181-99f0-4d44-97a3-821894eaf94e
+runningActivities=e2fe2181-99f0-4d44-97a3-821894eaf94e
+stoppedActivities=

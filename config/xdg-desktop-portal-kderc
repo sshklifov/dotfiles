@@ -1,0 +1,8 @@
+[FileDialogSize]
+1440x900 screen: Height=600
+1440x900 screen: Width=884
+
+[KFileDialog Settings]
+Recent Files[$e]=file:$HOME/Downloads/wallpapers/lock.jpg,file:$HOME/Downloads/wallpapers/lock.jpg
+Recent URLs[$e]=file:$HOME/Downloads/wallpapers/
+detailViewIconSize=16

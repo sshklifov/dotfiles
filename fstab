@@ -1,0 +1,12 @@
+# Static information about the filesystems.
+# See fstab(5) for details.
+
+# <file system> <dir> <type> <options> <dump> <pass>
+# /dev/nvme0n1p2
+UUID=b27c4c0a-16b9-4c19-92e4-0e8dfa664aba	/         	btrfs     	rw,relatime,ssd,discard=async,space_cache=v2			0 0
+
+# /dev/nvme0n1p1
+UUID=5548-D5B4      	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+# Snapshot subvolume
+UUID=b27c4c0a-16b9-4c19-92e4-0e8dfa664aba	/snapshots      btrfs     	rw,relatime,ssd,discard=async,space_cache=v2,subvolid=276	0 0

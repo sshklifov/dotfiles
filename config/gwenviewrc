@@ -1,0 +1,41 @@
+[$Version]
+update_info=gwenview.upd:SideBar_StatusBar_Rename,gwenview.upd:ImageView_AlphaBackgroundMode_Update,gwenview.upd:DeleteThumbnailSetting_Rename
+
+[General]
+LastUsedVersion=210800
+SideBarPage=operations
+
+[ImageView]
+ThumbnailSplitterSizes=572,163
+
+[MainWindow]
+1440x900 screen: Window-Maximized=true
+State=AAAA/wAAAAD9AAAAAAAABaAAAALwAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAA/////wAAAAAAAAAA
+ToolBarsMovable=Disabled
+
+[Recent Files]
+File1[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/icons/os_ubuntu-inverse.png
+File10[$e]=/boot/EFI/refind/themes/catppuccin/assets/previews/latte.webp
+File2[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/icons/os_ubuntu.png
+File3[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/icons/os_usb_noalpha.png
+File4[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/icons/os_usb.png
+File5[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/icons/os_win.png
+File6[$e]=/boot/EFI/refind/themes/catppuccin/assets/previews/overview.webp
+File7[$e]=/boot/EFI/refind/themes/catppuccin/assets/previews/mocha.webp
+File8[$e]=/boot/EFI/refind/themes/catppuccin/assets/previews/macchiato.webp
+File9[$e]=/boot/EFI/refind/themes/catppuccin/assets/previews/frappe.webp
+Name1[$e]=os_ubuntu-inverse.png
+Name10[$e]=latte.webp
+Name2[$e]=os_ubuntu.png
+Name3[$e]=os_usb_noalpha.png
+Name4[$e]=os_usb.png
+Name5[$e]=os_win.png
+Name6[$e]=overview.webp
+Name7[$e]=mocha.webp
+Name8[$e]=macchiato.webp
+Name9[$e]=frappe.webp
+
+[SideBar]
+InformationSplitterSizes=221,254
+IsVisible ViewMode=true
+SideBarSplitterSizes=227,1212

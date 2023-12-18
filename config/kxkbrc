@@ -1,0 +1,11 @@
+[$Version]
+update_info=kxkb.upd:remove-empty-lists,kxkb.upd:add-back-resetoptions,kxkb_variants.upd:split-variants
+
+[Layout]
+DisplayNames=,
+LayoutDefaultGlobal=1
+LayoutList=bg,us
+Options=grp:win_space_toggle
+ResetOldOptions=true
+Use=true
+VariantList=phonetic,

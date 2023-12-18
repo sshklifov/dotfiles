@@ -1,0 +1,12 @@
+[KFileDialog Settings]
+Recent Files[$e]=file:$HOME/Templates/kde_kb.kksrc,file:$HOME/Downloads/wallpapers/lock.jpg,file:$HOME/Downloads/wallpapers/macos-big-sur-stock-night-sedimentary-rocks-desert-starry-2560x1440-3795.jpg,file:$HOME/Downloads/wallpapers/cute-duck-cute-warning-5k-2560x1440-10104.png
+Recent URLs[$e]=file:$HOME/Templates/,file:$HOME/Downloads/wallpapers/,file:$HOME/Downloads/
+detailViewIconSize=16
+
+[MainWindow]
+1440x900 screen: Height=700
+1440x900 screen: Width=1440
+1440x900 screen: Window-Maximized=true
+MenuBar=Disabled
+State=AAAA/wAAAAD9AAAAAAAABaAAAAM8AAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+ToolBarsMovable=Disabled

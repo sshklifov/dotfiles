@@ -1,0 +1,16 @@
+[ExtractDialog]
+DirHistory[$e]=/run/media/stef/A3C4-A5E5/,$HOME/Downloads/
+
+[General]
+LockSidebar=true
+ShowSidebar=true
+
+[KFileDialog Settings]
+Recent Files[$e]=file:$HOME
+Recent URLs[$e]=file:$HOME/Downloads/,file:///run/media/stef/A3C4-A5E5/
+detailViewIconSize=16
+
+[MainWindow]
+State=AAAA/wAAAAD9AAAAAQAAAAEAAACoAAACKvwCAAAAAfsAAAAWAGEAcgBrAF8AcwBpAGQAZQBiAGEAcgEAAAAuAAACKgAAAHMBAAACAAADDQAAAioAAAAEAAAABAAAAAgAAAAI/AAAAAEAAAACAAAAAQAAABYAbQBhAGkAbgBUAG8AbwBsAEIAYQByAQAAAAD/////AAAAAAAAAAA=
+StatusBar=Disabled
+ToolBarsMovable=Disabled

@@ -1,0 +1,16 @@
+[$Version]
+update_info=ksmserver_update_loginMode_value.upd:ksmserver_update_loginMode_value_default_enum
+
+[LegacySession: saved at previous logout]
+count=0
+
+[Session: saved at previous logout]
+clientId1=106e70630000170288720000000006970002
+count=1
+program1=pulseaudio
+restartCommand1=
+restartStyleHint1=0
+userId1=stef
+
+[SubSession: 1ce5ab70-7b94-47cb-850b-bd0021dd1de3]
+count=0

@@ -1,0 +1,33 @@
+[Desktop Entry]
+FullScreen=false
+
+[General]
+LockSidebar=true
+ShowSidebar=true
+
+[MainWindow]
+1440x900 screen: Window-Maximized=true
+State=AAAA/wAAAAD9AAAAAQAAAAAAAADIAAAC8PwCAAAAAfsAAAAcAG8AawB1AGwAYQByAF8AcwBpAGQAZQBiAGEAcgEAAABMAAAC8AAAAQ4BAAACAAAE1wAAAvAAAAAEAAAABAAAAAgAAAAI/AAAAAMAAAABAAAAAQAAACwAcQB1AGkAYwBrAEEAbgBuAG8AdABhAHQAaQBvAG4AVABvAG8AbABCAGEAcgIAAAAA/////wAAAAAAAAAAAAAAAgAAAAEAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAA/////wAAAAAAAAAAAAAAAgAAAAEAAAAiAGEAbgBuAG8AdABhAHQAaQBvAG4AVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+ToolBarsMovable=Disabled
+
+[Recent Files]
+File1[$e]=$HOME/Downloads/image-wallpaper-15-1607202000.jpg
+File10[$e]=$HOME/Downloads/flash.png
+File2[$e]=$HOME/Downloads/themes.txt
+File3[$e]=/usr/share/wallpapers/Next/contents/images/360x720.png
+File4[$e]=$HOME/Downloads/aldeyjarfoss-2560x1440-13364.jpg
+File5[$e]=$HOME/Pictures/Screenshot_20231129_121932.png
+File6[$e]=$HOME/Pictures/Screenshot_20231129_121900.png
+File7[$e]=$HOME/ccls-cache/@home@stef@Downloads@viml-server/lexer@ExLexem.hpp
+File8[$e]=/boot/refind_linux.conf
+File9[$e]=/boot/EFI/refind/themes/ursamajor-rEFInd/README.md
+Name1[$e]=image-wallpaper-15-1607202000.jpg
+Name10[$e]=flash.png
+Name2[$e]=themes.txt
+Name3[$e]=360x720.png
+Name4[$e]=aldeyjarfoss-2560x1440-13364.jpg
+Name5[$e]=Screenshot_20231129_121932.png
+Name6[$e]=Screenshot_20231129_121900.png
+Name7[$e]=lexer@ExLexem.hpp
+Name8[$e]=refind_linux.conf
+Name9[$e]=README.md
